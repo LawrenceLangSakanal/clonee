@@ -1,6 +1,8 @@
 package com.gui.EmpManage;
 
 import com.gui.Home.User;
+import com.gui.Leave.LeaveApprovalForm;
+import com.gui.Leave.LeaveRequestForm;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
@@ -839,9 +841,11 @@ public class AttendanceManagement extends JFrame {
     }
 
     private void applyLeave() {
+        new LeaveRequestForm(com.motorph.util.AppContext.getInstance().getCurrentEmployee()).setVisible(true);
     }
 
     private void approveLeave() {
+        new LeaveApprovalForm(com.motorph.util.AppContext.getInstance().getCurrentEmployee()).setVisible(true);
     }
 
     private void openManualDTRDialog() {
