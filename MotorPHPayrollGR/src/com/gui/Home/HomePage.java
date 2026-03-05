@@ -34,6 +34,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.ImageIcon;
 import com.gui.EmpManage.editEmployee;
 import com.systemMaintenance.SystemMaintenance;
+import com.gui.Leave.LeaveRequestForm;
+import com.gui.Leave.LeaveApprovalForm;
 import javax.swing.JFrame;
 import com.gui.Payroll.PayrollDisplay;
 
@@ -92,6 +94,9 @@ public class HomePage extends javax.swing.JFrame {
         boolean canSystemMaintenance
                 = role.equals("IT Operations and Systems");
         jButton9.setVisible(canSystemMaintenance);
+
+        // ── Leave buttons (programmatically added to sidebar) ────────────
+        addLeaveButtons(role);
 
         //jPanel2 method
         setupJPanel2(); // we will define this method
@@ -280,6 +285,30 @@ public class HomePage extends javax.swing.JFrame {
         jPanel2.add(jLabelPhoneAllowance);
         jPanel2.add(jLabelClothingAllowance);
     }
+
+    /**
+     * Programmatically adds Leave Request and (if authorised) Leave Approval
+     * buttons to jPanel1 (the sidebar). This does not touch any Generated Code.
+     */
+    private void addLeaveButtons(String role) {
+        // Leave Request — available to every employee
+        javax.swing.JButton btnLeaveRequest = new javax.swing.JButton("Leave Request");
+        btnLeaveRequest.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+        btnLeaveRequest.addActionListener(e -> new LeaveRequestForm(currentUser).setVisible(true));
+        jPanel1.add(btnLeaveRequest);
+
+        // Leave Approval — available only to HR and leadership roles
+        boolean canApproveLeave = role.equals("HR Manager")
+                || role.equals("HR Team Leader")
+                || currentUser.isLeadership();
+        if (canApproveLeave) {
+            javax.swing.JButton btnLeaveApproval = new javax.swing.JButton("Leave Approval");
+            btnLeaveApproval.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+            btnLeaveApproval.addActionListener(e -> new LeaveApprovalForm(currentUser).setVisible(true));
+            jPanel1.add(btnLeaveApproval);
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
