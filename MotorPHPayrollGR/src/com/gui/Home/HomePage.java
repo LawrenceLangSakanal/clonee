@@ -96,6 +96,9 @@ public class HomePage extends javax.swing.JFrame {
         //jPanel2 method
         setupJPanel2(); // we will define this method
 
+        // ── Leave navigation buttons (added programmatically) ────────
+        addLeaveButtons();
+
         setResizable(false);// Removes maximize and resizing
         setLocationRelativeTo(null); // This centers the window on the screen
         pack();// Fit frame to preferred size
@@ -279,6 +282,44 @@ public class HomePage extends javax.swing.JFrame {
         jPanel2.add(jLabelRiceSubsidy);
         jPanel2.add(jLabelPhoneAllowance);
         jPanel2.add(jLabelClothingAllowance);
+    }
+
+    /**
+     * Adds Leave navigation buttons to jPanel1 (the sidebar) programmatically
+     * after initComponents().  The "Request Leave" button is visible to all
+     * employees; "Leave Approval" is restricted to HR / Manager / Admin.
+     */
+    private void addLeaveButtons() {
+        // "Request Leave" — all employees
+        javax.swing.JButton btnLeaveRequest = new javax.swing.JButton("Request Leave");
+        btnLeaveRequest.addActionListener(e -> {
+            new com.gui.Leave.LeaveRequestForm(
+                    com.motorph.util.AppContext.getInstance().getCurrentEmployee()
+            ).setVisible(true);
+        });
+        jPanel1.add(btnLeaveRequest);
+
+        // "Leave Approval" — HR / Manager / Admin only
+        String pos = currentUser.getuPosition();
+        boolean canApprove = pos.equals("HR Manager")
+                || pos.equals("HR Team Leader")
+                || pos.equals("HR Rank and File")
+                || pos.equals("Chief Executive Officer")
+                || pos.equals("Chief Operating Officer")
+                || pos.equals("Chief Finance Officer")
+                || pos.equals("Payroll Manager")
+                || pos.equals("Account Manager")
+                || pos.equals("Accounting Head")
+                || pos.equals("IT Operations and Systems");
+        if (canApprove) {
+            javax.swing.JButton btnLeaveApproval = new javax.swing.JButton("Leave Approval");
+            btnLeaveApproval.addActionListener(e -> {
+                new com.gui.Leave.LeaveApprovalForm(
+                        com.motorph.util.AppContext.getInstance().getCurrentEmployee()
+                ).setVisible(true);
+            });
+            jPanel1.add(btnLeaveApproval);
+        }
     }
 
     /**
@@ -621,6 +662,9 @@ public class HomePage extends javax.swing.JFrame {
                 JOptionPane.QUESTION_MESSAGE
         );
         if (confirm == JOptionPane.YES_OPTION) {
+            // Clear the shared session
+            com.motorph.util.AppContext.getInstance().clearSession();
+
             // Close ALL open windows first
             Window[] windows = Window.getWindows();
             for (Window window : windows) {

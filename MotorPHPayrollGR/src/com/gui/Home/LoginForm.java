@@ -482,6 +482,12 @@ public class LoginForm extends javax.swing.JFrame {
                 }
                 User loggedUser = getUserFromEmployeeData(user);
                 if (loggedUser != null) {
+                    // Store the logged-in employee in the shared AppContext session
+                    com.motorph.util.AppContext.getInstance()
+                            .getEmployeeRepo()
+                            .findById(user)
+                            .ifPresent(emp ->
+                                    com.motorph.util.AppContext.getInstance().setCurrentEmployee(emp));
                     JOptionPane.showMessageDialog(
                             this,
                             "Login successful.\nWelcome, " + loggedUser.getuFirstName() + "!",
