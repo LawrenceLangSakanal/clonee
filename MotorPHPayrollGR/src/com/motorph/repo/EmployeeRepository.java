@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
  */
 public class EmployeeRepository {
 
+    private static volatile EmployeeRepository INSTANCE;
+
+    public static synchronized EmployeeRepository getInstance() {
+        if (INSTANCE == null) INSTANCE = new EmployeeRepository();
+        return INSTANCE;
+    }
+
     private static final List<Employee> employees = new ArrayList<>();
 
     static {

@@ -13,6 +13,13 @@ import java.util.stream.Collectors;
  */
 public class LeaveRepository {
 
+    private static volatile LeaveRepository INSTANCE;
+
+    public static synchronized LeaveRepository getInstance() {
+        if (INSTANCE == null) INSTANCE = new LeaveRepository();
+        return INSTANCE;
+    }
+
     private final List<LeaveRequest> requests = new ArrayList<>();
     private final AtomicInteger idSequence = new AtomicInteger(1);
 

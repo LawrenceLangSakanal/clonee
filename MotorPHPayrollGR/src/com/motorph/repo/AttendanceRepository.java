@@ -12,6 +12,13 @@ import java.util.stream.Collectors;
  */
 public class AttendanceRepository {
 
+    private static volatile AttendanceRepository INSTANCE;
+
+    public static synchronized AttendanceRepository getInstance() {
+        if (INSTANCE == null) INSTANCE = new AttendanceRepository();
+        return INSTANCE;
+    }
+
     private final List<AttendanceRecord> records = new ArrayList<>();
 
     public void save(AttendanceRecord record) {
